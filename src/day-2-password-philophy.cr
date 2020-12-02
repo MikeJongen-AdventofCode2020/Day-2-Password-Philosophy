@@ -1,5 +1,8 @@
 require "option_parser"
 require "benchmark"
+require "string_scanner"
+
+PASSWORD_FORMAT =  /(?<min>\d+)-(?<max>\d+) (?<letter>\w): (?<password>\w+)/
 
 file_name = ""
 benchmark = false
@@ -44,5 +47,7 @@ def number_of_valid_passwords(passwords : Array(String))
 end
 
 def password_is_valid(password : String)
+  s = StringScanner.new(password)
+  s.scan(PASSWORD_FORMAT)
   return false
 end
