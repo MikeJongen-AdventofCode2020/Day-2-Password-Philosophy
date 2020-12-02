@@ -34,5 +34,15 @@ unless file_name.empty?
 end
 
 def number_of_valid_passwords(passwords : Array(String))
-  return 0
+  total_valid = 0
+  passwords.each do |password|
+    if password_is_valid(password)
+      total_valid += 1
+    end
+  end
+  return total_valid
+end
+
+def password_is_valid(password : String)
+  return false
 end
