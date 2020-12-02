@@ -86,5 +86,12 @@ def password_is_valid_toboggan(password : String)
   s = StringScanner.new(password)
   s.scan(PASSWORD_FORMAT)
   
-  return false
+  position_1 = s["password"][s["min"].to_i - 1]
+  position_2 = s["password"][s["max"].to_i - 1]
+
+  if !(position_1.to_s == s["letter"]) ^ !(position_2.to_s == s["letter"])
+    return true
+  else
+    return false
+  end
 end
