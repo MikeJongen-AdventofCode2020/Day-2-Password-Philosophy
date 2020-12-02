@@ -1,0 +1,13 @@
+name: day-2-password-philophy
+version: 0.1.0
+
+authors:
+  - your-name-here <your-email-here>
+
+targets:
+  day-2-password-philophy:
+    main: src/day-2-password-philophy.cr
+
+crystal: 0.35.1
+
+license: MIT
