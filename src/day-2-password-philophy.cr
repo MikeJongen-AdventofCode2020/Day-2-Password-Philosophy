@@ -6,6 +6,7 @@ PASSWORD_FORMAT =  /(?<min>\d+)-(?<max>\d+) (?<letter>\w): (?<password>\w+)/
 
 file_name = ""
 benchmark = false
+sled_policy = false
 
 OptionParser.parse do |parser|
   parser.banner = "Welcome to Report Repair"
@@ -16,6 +17,9 @@ OptionParser.parse do |parser|
   parser.on "-b", "--benchmark", "Measure benchmarks" do
     benchmark = true
   end
+  parser.on "-s", "--sled", "Sled password policy" do
+    sled_policy = true
+  end
   parser.on "-h", "--help", "Show help" do
     puts parser
     exit
@@ -25,28 +29,38 @@ end
 unless file_name.empty?
   passwords = File.read_lines(file_name)
   
-  if benchmark
-    Benchmark.ips do |x|
-      x.report("passwords") {result = number_of_valid_passwords(passwords)}
+  if sled_policy
+    if benchmark
+      Benchmark.ips do |x|
+        x.report("passwords") {result = number_of_valid_passwords_sled(passwords)}
+      end
+    else
+      result = number_of_valid_passwords_sled(passwords)
     end
   else
-    result = number_of_valid_passwords(passwords)
+    if benchmark
+      Benchmark.ips do |x|
+        x.report("passwords") {result = number_of_valid_passwords_toboggan(passwords)}
+      end
+    else
+      result = number_of_valid_passwords_toboggan(passwords)
+    end
   end
 
   puts result
 end
 
-def number_of_valid_passwords(passwords : Array(String))
+def number_of_valid_passwords_sled(passwords : Array(String))
   total_valid = 0
   passwords.each do |password|
-    if password_is_valid(password)
+    if password_is_valid_sled(password)
       total_valid += 1
     end
   end
   return total_valid
 end
 
-def password_is_valid(password : String)
+def password_is_valid_sled(password : String)
   s = StringScanner.new(password)
   s.scan(PASSWORD_FORMAT)
   
@@ -56,4 +70,21 @@ def password_is_valid(password : String)
   else
     return false
   end
+end
+
+def number_of_valid_passwords_toboggan(passwords : Array(String))
+  total_valid = 0
+  passwords.each do |password|
+    if password_is_valid_toboggan(password)
+      total_valid += 1
+    end
+  end
+  return total_valid
+end
+
+def password_is_valid_toboggan(password : String)
+  s = StringScanner.new(password)
+  s.scan(PASSWORD_FORMAT)
+  
+  return false
 end
