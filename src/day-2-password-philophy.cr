@@ -49,5 +49,11 @@ end
 def password_is_valid(password : String)
   s = StringScanner.new(password)
   s.scan(PASSWORD_FORMAT)
-  return false
+  
+  count = s["password"].count(s["letter"])
+  if (s["min"].to_i <= count) && (count <= s["max"].to_i)
+    return true
+  else
+    return false
+  end
 end
